@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Global Transportation Congestion Map</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="data:,">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="transport-tab-container">
+        <button class="transport-tab active" data-map="truck">Truck</button>
+        <button class="transport-tab" data-map="rail">Rail</button>
+        <button class="transport-tab" data-map="ocean">Ocean</button>
+        <button class="transport-tab" data-map="air">Air</button>
+    </div>
+
+    <div id="map-container">
+        <div id="truck-map" class="transport-map active"></div>
+        <div id="rail-map" class="transport-map"></div>
+        <div id="ocean-map" class="transport-map"></div>
+        <div id="air-map" class="transport-map"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+    <script src="js/truck_map.js"></script>
+    <script src="js/rail_map.js"></script>
+    <script src="js/ocean_map.js"></script>
+    <script src="js/air_map.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const truckMap = new TruckCongestionMap('truck-map');
+            const railMap = new RailCongestionMap('rail-map');
+            const oceanMap = new OceanCongestionMap('ocean-map');
+            const airMap = new AirCongestionMap('air-map');
+
+            document.querySelectorAll('.transport-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.transport-tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    tab.classList.add('active');
+
+                    document.querySelectorAll('.transport-map').forEach(m => {
+                        m.classList.remove('active');
+                    });
+                    document.getElementById(`${tab.dataset.map}-map`).classList.add('active');
+
+                    setTimeout(() => {
+                        switch(tab.dataset.map) {
+                            case 'truck':
+                                truckMap.map.invalidateSize();
+                                break;
+                            case 'rail':
+                                railMap.map.invalidateSize();
+                                break;
+                            case 'ocean':
+                                oceanMap.map.invalidateSize();
+                                break;
+                            case 'air':
+                                airMap.map.invalidateSize();
+                                break;
+                        }
+                    }, 100);
+                });
+            });
+            truckMap.map.invalidateSize();
+        });
+    </script>
+</body>
+</html>
