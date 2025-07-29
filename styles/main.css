@@ -1,0 +1,567 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600&display=swap');
+
+/* =====================================
+   1. Base Styles & Typography
+   ===================================== */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #333;
+}
+
+/* =====================================
+   2. Global Leaflet Overrides
+   ===================================== */
+.leaflet-control {
+    background: none !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.leaflet-popup-content-wrapper {
+    background-color: white !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+    padding: 0 !important;
+    overflow: hidden;
+    font-family: 'Noto Sans KR', sans-serif !important;
+    min-width: 220px !important;
+}
+
+.leaflet-popup-content {
+    margin: 0 !important;
+    padding: 16px !important;
+}
+
+.leaflet-popup-tip-container {
+    margin-top: -1px !important;
+}
+
+.leaflet-popup-tip {
+    background-color: white !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+}
+
+.leaflet-control-zoom-out {
+    border-radius: 6px 0 0 6px !important;
+}
+
+.leaflet-control-zoom-in {
+    border-radius: 0 6px 6px 0 !important;
+    border-right: none !important;
+}
+
+.leaflet-control-zoom a:hover,
+.leaflet-control-zoom a:active {
+    background-color: #f5f5f5 !important;
+    transform: none !important;
+}
+
+/* =====================================
+   3. Tab Menu Styles
+   ===================================== */
+.transport-tab-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 1000;
+    display: flex;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.transport-tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: white;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: black;
+    position: relative;
+    transition: all 0.3s ease;
+    padding: 0;
+    margin: 0;
+}
+
+.transport-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #00657E;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.transport-tab.active {
+    font-weight: 600;
+    color: #003A52;
+}
+
+.transport-tab.active::after {
+    opacity: 1;
+}
+
+.transport-tab:not(.active):hover::after {
+    opacity: 0.5;
+}
+
+/* =====================================
+   4. Map Container Styles
+   ===================================== */
+.transport-map {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px);
+    display: none;
+    background-color: #F8F8F8;
+}
+
+.transport-map.active {
+    display: block;
+}
+
+/* =====================================
+   5. Control Styles (Common & Specific)
+   ===================================== */
+
+.leaflet-top.leaflet-left {
+    display: none !important;
+}
+
+.leaflet-top.leaflet-right {
+    display: flex;
+    flex-direction: column;
+    gap: 5px !important;
+    top: 10px !important;
+    right: 10px !important;
+    width: 160px;
+    background: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    z-index: 999;
+}
+
+.map-control-group-right {
+    background: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.leaflet-control-zoom {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+    height: 34px;
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    margin: 0 !important;
+}
+
+.leaflet-control-zoom a {
+    flex: 1;
+    height: 34px !important;
+    background-color: white !important;
+    border: 1px solid #e0e0e0 !important;
+    text-decoration: none !important;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500 !important;
+    font-size: 13px !important;
+    color: #333 !important;
+    box-sizing: border-box;
+    
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    padding-top: 0 !important;
+}
+
+.reset-btn {
+    width: 100%;
+    padding: 0 15px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    box-shadow: none;
+    height: 34px;
+    white-space: nowrap;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.reset-btn:hover {
+    background: #f5f5f5;
+    transform: translateY(-1px);
+}
+
+.filter-control select,
+.map-control-group-right select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    background-color: #f9f9f9;
+    transition: all 0.2s;
+    color: #333;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='%23003A52'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-shadow: none;
+    height: 34px;
+}
+
+.filter-control select:focus,
+.map-control-group-right select:focus {
+    outline: none;
+    border-color: #00657E;
+    box-shadow: 0 0 0 2px rgba(0,101,126,0.2);
+}
+
+.truck-toggle-map-control {
+    background: white !important;
+    padding: 0 !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15) !important;
+    z-index: 1000;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0 !important;
+    width: 100%;
+    overflow: hidden;
+}
+
+.truck-toggle-btn {
+    flex: 1;
+    padding: 0 16px;
+    border: 1px solid #e0e0e0;
+    background: white;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    box-sizing: border-box;
+    margin: 0 !important;
+    flex-shrink: 0;
+    min-width: fit-content;
+    box-shadow: none;
+    border-radius: 0 !important;
+}
+
+.truck-toggle-btn:first-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.truck-toggle-btn:last-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.truck-toggle-btn:not(:first-child) {
+    border-left: none;
+}
+
+.truck-toggle-btn.truck-active {
+    background: #00657E;
+    color: white;
+    border-color: #00657E;
+}
+
+.truck-toggle-btn:not(.truck-active):hover {
+    background: #f0f0f0;
+}
+
+
+/* =====================================
+   6. Popup & Tooltip Styles
+   ==================================== */
+
+.leaflet-popup-content h4 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.leaflet-popup-content p {
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.leaflet-popup-content strong {
+    color: #444;
+    font-weight: 500;
+}
+
+.single-marker-popup .leaflet-popup-content-wrapper {
+    background: white;
+    color: #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.single-marker-popup .leaflet-popup-tip {
+    background: white;
+}
+
+.single-marker-popup .location-info h5 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 18px;
+    color: #003A52;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.single-marker-popup .location-info p {
+    margin-bottom: 5px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.single-marker-popup .location-info strong {
+    color: #555;
+}
+
+.single-marker-popup .location-info hr {
+    border: 0;
+    border-top: 1px dashed #ddd;
+    margin: 10px 0;
+}
+
+.truck-positive {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.truck-negative {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.truck-normal-text {
+    font-weight: 400;
+    color: #555;
+}
+
+.cluster-popup-header {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.cluster-popup-header h4, .cluster-popup-header p {
+    margin: 0;
+    padding: 0;
+}
+
+.cluster-popup-content {
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.location-info {
+    margin: 10px 0;
+}
+
+.location-info h5 {
+    margin-bottom: 5px;
+    color: #333;
+}
+
+
+/* =====================================
+   7. Information & Error Messages
+   ===================================== */
+
+.error-message {
+    background-color: #ffe0e0;
+    color: #d63031;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #d63031;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    z-index: 9999;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* =====================================
+   8. Custom Marker Icons
+   ===================================== */
+.custom-div-icon {
+}
+
+.custom-div-icon div {
+    border: 1.5px solid white;
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.marker-cluster-custom {
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+
+.custom-marker-tooltip {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    white-space: nowrap;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.leaflet-tooltip {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    left: 0 !important;
+    top: 0 !important;
+    transform: none !important;
+}
+
+
+/* =====================================
+   9. Responsive Design (Media Queries)
+   ===================================== */
+
+@media (min-width: 769px) {
+    .transport-tab {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .transport-tab-container {
+        height: 50px;
+        top: 0;
+    }
+
+    .transport-tab {
+        font-size: 15px;
+        padding: 0 3px;
+    }
+
+    .transport-map {
+        top: 50px;
+        height: calc(100% - 50px);
+    }
+
+    .leaflet-top.leaflet-right {
+        top: 10px !important;
+        gap: 5px !important;
+        width: calc(100% - 20px);
+        max-width: 160px;
+        right: 10px !important;
+        margin-left: auto;
+    }
+
+    .map-control-group-right {
+        width: 100%;
+        padding: 6px 8px;
+        gap: 6px;
+    }
+
+    .truck-toggle-map-control {
+        width: 100%;
+    }
+
+    .reset-btn,
+    .map-control-group-right select,
+    .leaflet-control-zoom a,
+    .truck-toggle-btn {
+        height: 34px !important;
+        font-size: 13px !important;
+    }
+    .leaflet-control-zoom {
+        height: 34px;
+    }
+    
+    .truck-toggle-map-control {
+        gap: 0 !important;
+        flex-wrap: nowrap;
+    }
+    .truck-toggle-btn:not(:first-child) {
+        border-left: none;
+    }
+    .truck-toggle-btn {
+        margin: 0 !important;
+        flex-shrink: 0;
+        min-width: fit-content;
+        padding: 0 12px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .transport-tab {
+        font-size: 14px;
+    }
+
+    .leaflet-top.leaflet-right {
+        top: 10px !important;
+    }
+}
