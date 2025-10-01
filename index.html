@@ -1,252 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    <title>Global Transportation Congestion Map</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cafe MAJI - Artesia, CA</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- External stylesheet link -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="data:,">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+
     <link rel="stylesheet" href="styles/main.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600&display=swap" rel="stylesheet">
 </head>
-<body class="bg-white text-gray-700">
+<body>
+    <div class="transport-tab-container">
+        <button class="transport-tab active" data-map="truck">Truck</button>
+        <button class="transport-tab" data-map="rail">Rail</button>
+        <button class="transport-tab" data-map="ocean">Ocean</button>
+        <button class="transport-tab" data-map="air">Air</button>
+    </div>
 
-    <!-- Header & Navigation -->
-    <header class="fixed top-0 w-full z-50 text-white">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="index.html" id="logo" class="text-2xl font-bold text-amber-300 transition-colors duration-300" style="font-family: 'Playfair Display', serif;">Cafe MAJI</a>
-            <div class="hidden md:flex items-center space-x-4">
-                <a href="menu.html" class="nav-link">Menu</a>
-                <a href="about.html" class="nav-link">About Us</a>
-                <a href="gallery.html" class="nav-link">Gallery</a>
-                <a href="https://www.yelp.com/biz/cafe-maji-artesia" target="_blank" class="nav-link text-xl">
-                    <i class="fab fa-yelp"></i>
-                </a>
-            </div>
-            <button id="mobile-menu-button" class="md:hidden text-2xl transition-colors duration-300">
-                <i class="fas fa-bars"></i>
-            </button>
-        </nav>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-2 bg-white/95 backdrop-blur-sm rounded-b-lg shadow-lg">
-            <a href="menu.html" class="block py-2 px-3 text-gray-700 hover:bg-amber-100 rounded">Menu</a>
-            <a href="about.html" class="block py-2 px-3 text-gray-700 hover:bg-amber-100 rounded">About Us</a>
-            <a href="gallery.html" class="block py-2 px-3 text-gray-700 hover:bg-amber-100 rounded">Gallery</a>
-             <a href="https://www.yelp.com/biz/cafe-maji-artesia" target="_blank" class="block py-2 px-3 text-gray-700 hover:bg-amber-100 rounded">
-                <i class="fab fa-yelp mr-2"></i> Yelp
-            </a>
-        </div>
-    </header>
+    <div id="map-container">
+        <div id="truck-map" class="transport-map active"></div>
+        <div id="rail-map" class="transport-map"></div>
+        <div id="ocean-map" class="transport-map"></div>
+        <div id="air-map" class="transport-map"></div>
+    </div>
 
-    <!-- Hero Section -->
-    <section class="hero-bg text-white h-screen flex items-center justify-center">
-        <div class="text-center">
-            <h1 class="text-5xl md:text-7xl font-bold drop-shadow-lg" style="font-family: 'Playfair Display', serif;">Welcome to Cafe MAJI</h1>
-            <p class="mt-4 text-xl md:text-2xl drop-shadow-md font-light">A cute, trendy, and classy cafe experience.</p>
-            <a href="about.html" class="mt-8 inline-block btn">Learn More</a>
-        </div>
-    </section>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-6 py-12">
+    <script src="js/truck_map.js"></script>
+    <script src="js/rail_map.js"></script>
+    <script src="js/ocean_map.js"></script>
+    <script src="js/air_map.js"></script>
 
-        <!-- About Section Preview -->
-        <section id="about" class="my-16 animate-on-scroll">
-            <h2 class="section-title">A Vibe for Every Occasion</h2>
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <img src="https://images.unsplash.com/photo-1559925333-a4e9a973c66f?q=80&w=1974&auto=format&fit=crop" onerror="this.onerror=null;this.src='https://placehold.co/600x400/f5e5d5/4a5568?text=Cozy+Interior';" alt="Cafe MAJI Interior" class="rounded-lg shadow-xl w-full h-auto object-cover">
-                <div class="text-lg">
-                    <p class="mb-4">
-                        Cafe MAJI is more than just a coffee shop; it's a destination. Our super cool atmosphere is perfect for dates, Instagram photos, or simply enjoying a calm moment. 
-                    </p>
-                    <p class="mb-4">
-                        Designed to feel like a chic, high-school party, our space is decked out with countless details that create a unique and memorable experience.
-                    </p>
-                    <a href="about.html" class="btn">More About Us</a>
-                </div>
-            </div>
-        </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const truckMap = new TruckCongestionMap('truck-map');
+            const railMap = new RailCongestionMap('rail-map');
+            const oceanMap = new OceanCongestionMap('ocean-map');
+            const airMap = new AirCongestionMap('air-map');
 
-        <!-- Reviews Section -->
-        <section id="reviews" class="my-16">
-            <h2 class="section-title animate-on-scroll">What Our Customers Say</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Review 1 -->
-                <div class="info-card animate-on-scroll" data-delay="0ms">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mr-4">
-                            <i class="fas fa-user text-amber-700"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold text-gray-800">Brandon Choi</p>
-                            <p class="text-sm text-gray-500">22 September 2025</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600">"This place is really cute for a date and instagram pictures. The food is pretty good, nothing amazing, but good enough."</p>
-                </div>
-                <!-- Review 2 -->
-                <div class="info-card animate-on-scroll" data-delay="150ms">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mr-4">
-                             <i class="fas fa-user text-amber-700"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold text-gray-800">Surabhi Vijay</p>
-                            <p class="text-sm text-gray-500">13 September 2025</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600">"We stumbled upon this place... This is an adorable place, decked up with a zillion baubles... The service is friendly."</p>
-                </div>
-                <!-- Review 3 -->
-                <div class="info-card animate-on-scroll" data-delay="300ms">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mr-4">
-                             <i class="fas fa-user text-amber-700"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold text-gray-800">Caleb Starkovich</p>
-                            <p class="text-sm text-gray-500">1 September 2025</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600">"Super cool atmosphere! Every friend I have brought here absolutely loved it and had a great time."</p>
-                </div>
-            </div>
-        </section>
+            document.querySelectorAll('.transport-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.transport-tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    tab.classList.add('active');
 
-        <!-- Business Info Section -->
-        <section id="info" class="my-16 animate-on-scroll">
-            <h2 class="section-title">Cafe Information</h2>
-            <div class="bg-amber-50 p-8 rounded-xl shadow-lg">
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
-                    <!-- Amenities -->
-                    <div>
-                        <h3 class="font-bold text-xl mb-4 text-amber-800" style="font-family: 'Playfair Display', serif;">Amenities & Features</h3>
-                        <ul class="space-y-3">
-                            <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-3"></i> Offers Takeout</li>
-                            <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-3"></i> Good for Groups, Kids, & Working</li>
-                            <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-3"></i> Good for Brunch, Lunch, Dessert</li>
-                            <li class="flex items-center"><i class="fas fa-wifi text-green-500 mr-3"></i> Free Wi-Fi</li>
-                            <li class="flex items-center"><i class="fas fa-parking text-green-500 mr-3"></i> Street & Private Lot Parking</li>
-                            <li class="flex items-center"><i class="fas fa-restroom text-green-500 mr-3"></i> Gender-neutral restrooms</li>
-                             <li class="flex items-center"><i class="fas fa-times-circle text-red-500 mr-3"></i> No Reservations or Delivery</li>
-                             <li class="flex items-center"><i class="fas fa-times-circle text-red-500 mr-3"></i> No Outdoor Seating</li>
-                        </ul>
-                    </div>
-                    <!-- Payments & Safety -->
-                    <div>
-                        <h3 class="font-bold text-xl mb-4 text-amber-800" style="font-family: 'Playfair Display', serif;">Payments & Safety</h3>
-                        <ul class="space-y-3">
-                            <li class="flex items-center"><i class="fas fa-credit-card text-green-500 mr-3"></i> Accepts Credit Cards</li>
-                            <li class="flex items-center"><i class="fab fa-apple-pay text-green-500 mr-3 text-2xl"></i> Accepts Apple Pay</li>
-                            <li class="flex items-center"><i class="fas fa-head-side-mask text-green-500 mr-3"></i> Masks required</li>
-                            <li class="flex items-center"><i class="fas fa-user-shield text-green-500 mr-3"></i> Staff wears masks</li>
-                            <li class="flex items-center"><i class="fab fa-android text-red-500 mr-3 text-2xl"></i> No Android Pay</li>
-                            <li class="flex items-center"><i class="fab fa-bitcoin text-red-500 mr-3 text-2xl"></i> No Cryptocurrency</li>
-                        </ul>
-                    </div>
-                    <!-- Atmosphere -->
-                    <div>
-                        <h3 class="font-bold text-xl mb-4 text-amber-800" style="font-family: 'Playfair Display', serif;">Atmosphere</h3>
-                        <ul class="space-y-3">
-                            <li class="flex items-center"><i class="fas fa-star text-yellow-500 mr-3"></i> Hipster, Trendy, Classy, Casual</li>
-                            <li class="flex items-center"><i class="fas fa-volume-up text-blue-500 mr-3"></i> Moderate Noise Level</li>
-                            <li class="flex items-center"><i class="fas fa-dog text-red-500 mr-3"></i> Dogs Not Allowed</li>
-                            <li class="flex items-center"><i class="fas fa-wheelchair text-red-500 mr-3"></i> Not Wheelchair Accessible</li>
-                            <li class="flex items-center"><i class="fas fa-tv text-red-500 mr-3"></i> No TV</li>
-                            <li class="flex items-center"><i class="fas fa-bicycle text-red-500 mr-3"></i> No Bike Parking</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+                    document.querySelectorAll('.transport-map').forEach(m => {
+                        m.classList.remove('active');
+                    });
+                    document.getElementById(`${tab.dataset.map}-map`).classList.add('active');
 
-        <!-- Hours & Location Section -->
-        <section id="location" class="my-16 animate-on-scroll">
-             <h2 class="section-title">Visit Us</h2>
-            <div class="grid md:grid-cols-2 gap-12 items-start bg-amber-50 p-8 rounded-xl shadow-lg">
-                <!-- Hours -->
-                <div>
-                    <h3 class="font-bold text-2xl mb-6 text-center text-amber-800" style="font-family: 'Playfair Display', serif;">Work Hours</h3>
-                    <div class="space-y-3 text-lg">
-                        <div class="flex justify-between border-b pb-2"><span class="font-semibold">Monday</span> <span>1:00 PM - 11:00 PM</span></div>
-                        <div class="flex justify-between border-b pb-2"><span class="font-semibold">Tuesday</span> <span>1:00 PM - 11:00 PM</span></div>
-                        <div class="flex justify-between border-b pb-2"><span class="font-semibold">Wednesday</span> <span>1:00 PM - 11:00 PM</span></div>
-                        <div class="flex justify-between border-b pb-2"><span class="font-semibold">Thursday</span> <span>1:00 PM - 11:00 PM</span></div>
-                        <div class="flex justify-between border-b pb-2"><span class="font-semibold">Friday</span> <span>1:00 PM - 11:00 PM</span></div>
-                        <div class="flex justify-between border-b pb-2"><span class="font-semibold">Saturday</span> <span>1:00 PM - 11:00 PM</span></div>
-                        <div class="flex justify-between"><span class="font-semibold">Sunday</span> <span>1:00 PM - 11:00 PM</span></div>
-                    </div>
-                </div>
-                <!-- Location -->
-                <div>
-                    <h3 class="font-bold text-2xl mb-6 text-center text-amber-800" style="font-family: 'Playfair Display', serif;">Our Location</h3>
-                    <div class="mb-4 text-center">
-                        <p class="font-bold text-gray-800 text-lg">Address</p>
-                        <p>12232 Artesia Blvd, Artesia, CA 90701, USA</p>
-                    </div>
-                    <div class="mb-6 text-center">
-                        <p class="font-bold text-gray-800 text-lg">Phone</p>
-                        <p>(562) 281-9511</p>
-                    </div>
-                    <div class="h-64 md:h-80 rounded-lg overflow-hidden shadow-inner">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3318.527376031238!2d-118.0864386847926!3d33.87611398069634!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80dd2d08310c1e57%3A0xe5a33b9e4725e141!2s12232%20Artesia%20Blvd%2C%20Artesia%2C%20CA%2090701!5e0!3m2!1sen!2sus!4v1664582930263!5m2!1sen!2sus" 
-                            width="100%" 
-                            height="100%" 
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Gallery Preview Section -->
-        <section id="gallery-preview" class="my-16 animate-on-scroll">
-            <h2 class="section-title">Glimpse of Our Cafe</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="h-64 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300">
-                    <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1937" alt="Latte Art" class="w-full h-full object-cover">
-                </div>
-                 <div class="h-64 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300">
-                    <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1740" alt="Cafe Interior" class="w-full h-full object-cover">
-                </div>
-                 <div class="h-64 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300">
-                    <img src="https://images.unsplash.com/photo-1525896523256-1a8402c59a45?q=80&w=1854" alt="Pastries" class="w-full h-full object-cover">
-                </div>
-                 <div class="h-64 rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300">
-                    <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1887" alt="Coffee cup" class="w-full h-full object-cover">
-                </div>
-            </div>
-            <div class="text-center mt-12">
-                <a href="gallery.html" class="btn">View Full Gallery</a>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="container mx-auto px-6 text-center">
-            <p class="font-bold text-xl mb-2 text-amber-300" style="font-family: 'Playfair Display', serif;">Cafe MAJI</p>
-            <p class="text-gray-300">12232 Artesia Blvd, Artesia, CA 90701</p>
-            <p class="text-gray-300">(562) 281-9511</p>
-            <div class="mt-4 text-2xl space-x-6">
-                <a href="#" class="hover:text-amber-300 transition-colors"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="hover:text-amber-300 transition-colors"><i class="fab fa-facebook"></i></a>
-                <a href="https://www.yelp.com/biz/cafe-maji-artesia" target="_blank" class="hover:text-amber-300 transition-colors"><i class="fab fa-yelp"></i></a>
-            </div>
-            <p class="mt-6 text-sm text-gray-400">&copy; 2025 Cafe MAJI. All Rights Reserved.</p>
-        </div>
-    </footer>
-
-    <!-- External script link -->
-    <script src="js/main.js"></script>
+                    setTimeout(() => {
+                        switch(tab.dataset.map) {
+                            case 'truck':
+                                truckMap.map.invalidateSize();
+                                break;
+                            case 'rail':
+                                railMap.map.invalidateSize();
+                                break;
+                            case 'ocean':
+                                oceanMap.map.invalidateSize();
+                                break;
+                            case 'air':
+                                airMap.map.invalidateSize();
+                                break;
+                        }
+                    }, 100);
+                });
+            });
+            truckMap.map.invalidateSize();
+        });
+    </script>
 </body>
 </html>
-
